@@ -1,13 +1,12 @@
 package com.wazzups.itauunibancotransaction.service;
 
-import com.wazzups.itauunibancotransaction.infra.exceptions.UnprocessableException;
 import com.wazzups.itauunibancotransaction.model.dto.StatisticsResponse;
 import com.wazzups.itauunibancotransaction.model.dto.TransactionRequest;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,40 +16,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionService {
 
-    private List<TransactionRequest> transactionList = new ArrayList<>();
+    private final List<TransactionRequest> store = new ArrayList<>();
 
-    public void addTransaction(TransactionRequest dto) {
-        log.info("Init processing transaction");
-
-        if (dto.dateTime().isAfter(OffsetDateTime.now())) {
-            log.error("Datetime after now datetime");
-            throw new UnprocessableException("Datetime after now datetime");
-        }
-
-        if (dto.value() < 0) {
-            log.error("Value shouldn't be lesser than 0");
-            throw new UnprocessableException("Value shouldn't be lesser than 0\"");
-        }
-
-        transactionList.add(dto);
+    public void add(TransactionRequest tx) {
+        store.add(tx);
     }
 
-    public void cleanTransaction() {
-        transactionList.clear();
+    public void clear() {
+        store.clear();
     }
 
-    public List<TransactionRequest> getTransactions(Long seconds) {
-        OffsetDateTime timeInterval = OffsetDateTime.now().minusSeconds(seconds);
+    public StatisticsResponse getStatistics(Long seconds) {
+        OffsetDateTime cutOff = OffsetDateTime.now().minusSeconds(60);
+        DoubleSummaryStatistics stats = store.stream().filter(tx -> !tx.getDateTime().isBefore(cutOff))
+            .mapToDouble(TransactionRequest::getValue).summaryStatistics();
 
-        return transactionList.stream().filter(t -> t.dateTime().isAfter(timeInterval)).toList();
-    }
+        long count = stats.getCount();
+        BigDecimal sum = BigDecimal.valueOf(stats.getSum());
+        BigDecimal avg = count == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(stats.getAverage());
+        BigDecimal min = count == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(stats.getMin());
+        BigDecimal max = count == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(stats.getMax());
 
-    public List<StatisticsResponse> calculateStatistics(Long seconds) {
-        List<TransactionRequest> transactions = getTransactions(seconds);
-
-        DoubleSummaryStatistics stats = transactions.stream().collect(Collectors.summarizingDouble(TransactionRequest::value));
-
-        stats.
-
+        return new StatisticsResponse(count, sum, avg, min, max);
     }
 }

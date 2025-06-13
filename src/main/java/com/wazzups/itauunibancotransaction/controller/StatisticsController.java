@@ -2,7 +2,6 @@ package com.wazzups.itauunibancotransaction.controller;
 
 import com.wazzups.itauunibancotransaction.model.dto.StatisticsResponse;
 import com.wazzups.itauunibancotransaction.service.TransactionService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,8 @@ public class StatisticsController {
     private final TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<List<StatisticsResponse>> getStatistics(@RequestParam(value = "dateInterval", required = false, defaultValue = "30") Long dateInterval) {
-        List<StatisticsResponse> statisticsResponses = transactionService.calculateStatistics(dateInterval);
+    public ResponseEntity<StatisticsResponse> getStatistics(@RequestParam(value = "seconds", required = false, defaultValue = "30") Long seconds) {
+        StatisticsResponse statisticsResponses = transactionService.getStatistics(seconds);
         return ResponseEntity.ok(statisticsResponses);
     }
 }
