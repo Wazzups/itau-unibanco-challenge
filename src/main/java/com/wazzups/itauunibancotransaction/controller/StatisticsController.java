@@ -17,7 +17,7 @@ public class StatisticsController {
     private final TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<StatisticsResponse> getStatistics(@RequestParam(value = "seconds", required = false, defaultValue = "30") Long seconds) {
+    public ResponseEntity<StatisticsResponse> getStatistics(@RequestParam(value = "seconds", required = false) Long seconds) {
         StatisticsResponse statisticsResponses = transactionService.getStatistics(seconds);
         return ResponseEntity.ok(statisticsResponses);
     }

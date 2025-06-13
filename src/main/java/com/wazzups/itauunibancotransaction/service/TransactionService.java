@@ -9,6 +9,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,18 +17,27 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionService {
 
+    @Value("${stats.seconds}")
+    private int seconds;
+
     private final List<TransactionRequest> store = new ArrayList<>();
 
     public void add(TransactionRequest tx) {
+        log.debug("Adding transaction: value={} at {}", tx.getValue(), tx.getDateTime());
         store.add(tx);
+        log.info("Transaction count: {}", store.size());
     }
 
     public void clear() {
+        log.debug("Clearing all {} transactions", store.size());
         store.clear();
     }
 
     public StatisticsResponse getStatistics(Long seconds) {
-        OffsetDateTime cutOff = OffsetDateTime.now().minusSeconds(60);
+        seconds = (seconds != null) ? seconds : this.seconds;
+
+        log.debug("Computing statistics for last {} seconds", seconds);
+        OffsetDateTime cutOff = OffsetDateTime.now().minusSeconds(seconds);
         DoubleSummaryStatistics stats = store.stream().filter(tx -> !tx.getDateTime().isBefore(cutOff))
             .mapToDouble(tx -> tx.getValue().doubleValue()).summaryStatistics();
 
