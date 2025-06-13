@@ -8,4 +8,13 @@ logging:
         itauunibancotransaction: debug
 
 stats:
-  seconds: 60
+  seconds: 65
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

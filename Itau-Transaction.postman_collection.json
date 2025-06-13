@@ -1,0 +1,88 @@
+{
+	"info": {
+		"_postman_id": "dc33f436-9ed4-4025-9937-28b8fc3ab3b3",
+		"name": "Itau-Transaction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10209553",
+		"_collection_link": "https://winter-shadow-586027.postman.co/workspace/Cycloid~2aeede04-b849-4c23-8e47-4d1450c21d13/collection/10209553-dc33f436-9ed4-4025-9937-28b8fc3ab3b3?action=share&source=collection_link&creator=10209553"
+	},
+	"item": [
+		{
+			"name": "statistics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Clara\",\n    \"cpfCnpj\": \"345\",\n    \"email\": \"clara@devmail.com\",\n    \"password\": \"123\",\n    \"walletType\": \"MERCHANT\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/statistics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"statistics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transaction",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Clara\",\n    \"cpfCnpj\": \"345\",\n    \"email\": \"clara@devmail.com\",\n    \"password\": \"123\",\n    \"walletType\": \"MERCHANT\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transaction",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"value\": \"12.24\",\n    \"dateTime\": \"2020-08-07T12:34:56.789-03:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
