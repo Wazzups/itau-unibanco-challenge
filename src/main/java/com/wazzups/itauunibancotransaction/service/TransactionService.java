@@ -29,7 +29,7 @@ public class TransactionService {
     public StatisticsResponse getStatistics(Long seconds) {
         OffsetDateTime cutOff = OffsetDateTime.now().minusSeconds(60);
         DoubleSummaryStatistics stats = store.stream().filter(tx -> !tx.getDateTime().isBefore(cutOff))
-            .mapToDouble(TransactionRequest::getValue).summaryStatistics();
+            .mapToDouble(tx -> tx.getValue().doubleValue()).summaryStatistics();
 
         long count = stats.getCount();
         BigDecimal sum = BigDecimal.valueOf(stats.getSum());
